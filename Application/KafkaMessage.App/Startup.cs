@@ -31,6 +31,8 @@ namespace KafkaMessage.App
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "KafkaMessage.App", Version = "v1" });
             });
+
+            services.AddHostedService<ProducerWorker>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
