@@ -1,3 +1,6 @@
+using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.DataModel;
+using KafkaMessage.App.Database;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -32,6 +35,10 @@ namespace KafkaMessage.App
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "KafkaMessage.App", Version = "v1" });
             });
 
+            services.AddDefaultAWSOptions(Configuration.GetAWSOptions("AWS"));
+            services.AddTransient<ClienteRepository>();
+            services.AddSingleton<IDynamoDBContext, DynamoDBContext>();
+            services.AddAWSService<IAmazonDynamoDB>();
             services.AddHostedService<ProducerWorker>();
         }
 
