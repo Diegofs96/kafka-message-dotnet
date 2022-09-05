@@ -1,20 +1,19 @@
-using Amazon.DynamoDBv2;
-using Amazon.DynamoDBv2.DataModel;
-using KafkaMessage.App.Database;
+using kafka_consumer_sqs.Application.Configuration;
+using kafka_consumer_sqs.Domain.Worker;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace KafkaMessage.App
+namespace kafka_consumer_sqs.Application
 {
     public class Startup
     {
@@ -28,18 +27,10 @@ namespace KafkaMessage.App
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "KafkaMessage.App", Version = "v1" });
-            });
+            services.RegisterInjectionDependency(Configuration);
 
-            services.AddDefaultAWSOptions(Configuration.GetAWSOptions("AWS"));
-            services.AddTransient<ClienteRepository>();
-            services.AddSingleton<IDynamoDBContext, DynamoDBContext>();
-            services.AddAWSService<IAmazonDynamoDB>();
-            services.AddHostedService<ProducerWorker>();
+            services.AddHostedService<ConsumerWorker>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,9 +39,9 @@ namespace KafkaMessage.App
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "KafkaMessage.App v1"));
             }
+
+            app.UseHttpsRedirection();
 
             app.UseRouting();
 

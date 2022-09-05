@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace KafkaMessage.Domain
+namespace kafka_consumer_sqs.Infrastructure
 {
     public class Class1
     {

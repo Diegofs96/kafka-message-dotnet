@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace KafkaMessage.App
+namespace kafka_consumer_sqs.Application
 {
     public class Program
     {
